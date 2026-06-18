@@ -157,7 +157,8 @@ service_triggers() {
 }
 EOF
         
-        sudo chmod +x /etc/init.d/sing-box
+        chmod +x /etc/init.d/sing-box
+        cp $INSTALL_DIR/run/vanilla.json $INSTALL_DIR/run/config.json
         echo "🔄 正在启用并启动 OpenWrt procd 服务..."
         sudo /etc/init.d/sing-box enable
         sudo /etc/init.d/sing-box start
@@ -218,6 +219,7 @@ depend() {
 EOF
         sudo chmod +x /etc/init.d/sing-box
         sudo rc-update add sing-box default 2>/dev/null || true
+        cp $INSTALL_DIR/run/vanilla.json $INSTALL_DIR/run/config.json
         sudo rc-service sing-box start
         echo "✅ OpenRC 自启动服务已成功创建并启动！"
     
@@ -226,6 +228,7 @@ EOF
     fi
 
     # 5. 提示控制面板访问 URL
+    
     echo "--------------------------------------------------"
     echo "🎉 🎉 🎉 安装部署成功 🎉 🎉 🎉"
     echo "🔗 控制面板访问 URL: http://127.0.0.1:9090"
