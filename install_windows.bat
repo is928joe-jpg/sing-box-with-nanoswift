@@ -24,8 +24,6 @@ if !errorlevel! neq 0 (
     exit /b 1
 )
 
-
-
 echo ============================================================
 echo 🚀 Welcome to sing-box (Nanoswift) Windows Upgrade Script
 echo ============================================================

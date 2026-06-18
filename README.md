@@ -20,7 +20,7 @@
 
 ## 🚀 快速安装
 
-### 🐧 Unix (Linux / macOS) 平台
+### 🐧 Unix (Linux /Openwrt / macOS) 平台
 
 请根据您的网络环境，选择以下任意一条命令复制到终端执行：
 
