@@ -44,7 +44,6 @@ bash -c "$(curl -fsSL https://cdn.gh-proxy.org/https://raw.githubusercontent.com
 ### 🪟 Windows 平台
 
 请根据您的网络环境，选择以下任意一条命令在 **PowerShell** 或 **CMD** 中执行：
-**发现一个坑：** 发现被github 从ms-dos格式强行转换为unix格式了，install.sh使用记事本重新保存一下，就不会出错，可能需要再写一个powershell版本，它没有这个问题。
 
 **IPv4 优先下载：**
 ```powershell
