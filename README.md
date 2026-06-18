@@ -1,9 +1,11 @@
 # 袖珍 sing-box with Nanoswift
 
 <p align="left">
-  <strong>⚡ sing-box + nanoswift 体积不到 20M，全图形化操作的 sing-box 便捷管理工具 ⚡</strong>
+  <strong>⚡ sing-box + nanoswift 体积不到 20M（9-12M），全图形化操作的 sing-box 便捷管理工具 ⚡</strong>
 </p>
-
+<p align="left">
+  <strong>⚡ 安装完成之后，面板访问：http://127.0.0.1:9090/ui 默认密码：12345678 ⚡</strong>
+</p>
 ---
 
 既拥有 **sing-box** 的完整强大功能，又兼具 **YACD** 直接管理节点的便利性。  
