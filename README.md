@@ -106,7 +106,6 @@ bash -c "$(curl -fsSL https://cdn.gh-proxy.org/https://raw.githubusercontent.com
 <a href="https://github.com/is928joe-jpg/sing-box-with-nanoswift/blob/main/images/nanoswift_sub.png?raw=true" target="_blank">
   <img src="https://github.com/is928joe-jpg/sing-box-with-nanoswift/blob/main/images/nanoswift_sub.png?raw=true" alt="节点订阅界面" width="100%">
 </a>
----
 
 ### 🪟 新版本界面提示
 <a href="https://github.com/is928joe-jpg/sing-box-with-nanoswift/blob/main/images/nano_new_version.png?raw=true" target="_blank">
