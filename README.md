@@ -108,9 +108,9 @@ bash -c "$(curl -fsSL https://cdn.gh-proxy.org/https://raw.githubusercontent.com
 </a>
 ---
 
-### 🪟 新版本提示界面
+### 🪟 新版本界面提示
 <a href="https://github.com/is928joe-jpg/sing-box-with-nanoswift/blob/main/images/nano_new_version.png?raw=true" target="_blank">
-  <img src="https://github.com/is928joe-jpg/sing-box-with-nanoswift/blob/main/images/nano_new_version.png?raw=true" alt="新版本提示界面" width="100%">
+  <img src="https://github.com/is928joe-jpg/sing-box-with-nanoswift/blob/main/images/nano_new_version.png?raw=true" alt="新版本界面提示" width="100%">
 </a>
 ---
 
