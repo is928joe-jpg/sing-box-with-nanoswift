@@ -93,7 +93,7 @@ bash -c "$(curl -fsSL https://cdn.gh-proxy.org/https://raw.githubusercontent.com
 ![Windows 安装界面](https://github.com/is928joe-jpg/sing-box-with-nanoswift/blob/main/images/nanoswift_windows.png?raw=true)
 
 ### 🪟 节点订阅界面
-![节点订阅界面](https://github.com/is928joe-jpg/sing-box-with-nanoswift/blob/main/images/nanoswift_sub.png?raw=true?raw=true)
+![节点订阅界面](https://github.com/is928joe-jpg/sing-box-with-nanoswift/blob/main/images/nanoswift_sub.png?raw=true)
 ---
 
 ## Star History
