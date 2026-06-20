@@ -212,7 +212,7 @@ esac
 DATE_DIR="dist/$(date +%Y-%m-%d)"
 mkdir -p "$DATE_DIR"
 
-RAW_BASE_URL="https://raw.githubusercontent.com/is928joe-jpg/sing-box-with-nanoswift/refs/heads/main/2026-06-18"
+RAW_BASE_URL="https://raw.githubusercontent.com/is928joe-jpg/sing-box-with-nanoswift/refs/heads/main/2026-06-20"
 BINARY_NAME="sing-box-${platform}"
 SHA_NAME="${BINARY_NAME}.sha256"
 
