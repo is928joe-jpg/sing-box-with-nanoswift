@@ -274,7 +274,18 @@ elif [ -f /sbin/openrc-run ] || [ -d /etc/init.d ]; then
     sudo rc-service sing-box stop 2>/dev/null || true
     sudo rc-update del sing-box default 2>/dev/null || true
 fi
-sudo pkill -f "sing-box run" 2>/dev/null || true
+
+# 😎 【优化这里】：只杀真正的二进制主程序，或者排除当前进程，防止自杀
+if command -v pgrep &>/dev/null; then
+    # 查找带有 "sing-box run" 的进程，但排除当前脚本的 PID ($$)
+    OLD_PIDS=$(pgrep -f "sing-box run" | grep -v "$$") || true
+    if [ -n "$OLD_PIDS" ]; then
+        echo "$OLD_PIDS" | xargs sudo kill -9 2>/dev/null || true
+    fi
+else
+    sudo pkill -f "sing-box run" 2>/dev/null || true
+fi
+
 sleep 1
 echo "✅ 旧服务已停止"
 
