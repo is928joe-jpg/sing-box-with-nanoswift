@@ -2,6 +2,7 @@
 cd /tmp
 set -e # 出错时立即退出
 
+# 采用uname -m 
 detect_target() {
     local arch os user_space
     arch="$(uname -m)"
