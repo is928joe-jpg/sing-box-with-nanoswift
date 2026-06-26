@@ -33,7 +33,7 @@ echo ============================================================
 :input_loop
 set "USER_INPUT_DIR="
 echo.
-echo 📝 请输入 sing-box 的安装目录 (例如: C:\Program Files\sing-box 或 D:\sing-box)
+echo 请输入 sing-box 的安装目录 (例如: C:\Program Files\sing-box 或 D:\sing-box)
 set /p "USER_INPUT_DIR=请输入路径: "
 
 :: 过滤用户可能不小心输入的双引号
@@ -41,7 +41,7 @@ if defined USER_INPUT_DIR set "USER_INPUT_DIR=!USER_INPUT_DIR:"=!"
 
 :: 严格判空逻辑
 if "%USER_INPUT_DIR%"=="" (
-    echo ❌ [错误] 安装目录不能为空！为了安全部署，请重新输入有效的路径。
+    echo [错误] 安装目录不能为空！为了安全部署，请重新输入有效的路径。
     goto input_loop
 )
 
@@ -58,7 +58,7 @@ echo ⚙️ 目标安装路径已确认: !INSTALL_DIR!
 echo ------------------------------------------------------------
 
 echo.
-echo ⚡ 请选择适合你当前网络环境的 GitHub 加速代理:
+echo 请选择适合你当前网络环境的 GitHub 加速代理:
 echo 1] 不使用代理 (直连官方 GitHub)
 echo 2] v4.gh-proxy.org (推荐 IPv4 环境使用)
 echo 3] v6.gh-proxy.org (纯 IPv6 / 校园网环境首选)
