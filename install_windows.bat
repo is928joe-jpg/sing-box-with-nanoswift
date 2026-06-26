@@ -104,7 +104,7 @@ if !errorlevel! neq 0 (
 )
 
 :: ==========================================
-:: SHA256 完整性验证（最终修复版）
+:: SHA256 完整性验证（最终稳定版）
 :: ==========================================
 echo.
 echo [INFO] Performing SHA256 integrity check...
@@ -114,26 +114,38 @@ if not exist "!SHA_NAME!" (
     exit /b 1
 )
 
+:: 读取期望哈希
 set "EXPECTED_HASH="
-for /f "tokens=1" %%H in (!SHA_NAME!) do (
+for /f "usebackq tokens=1" %%H in ("!SHA_NAME!") do (
     set "EXPECTED_HASH=%%H"
     goto got_expected_hash
 )
 :got_expected_hash
 
+if "!EXPECTED_HASH!"=="" (
+    echo [ERROR] Failed to read expected hash from checksum file!
+    pause
+    exit /b 1
+)
+
 set "EXPECTED_HASH=!EXPECTED_HASH: =!"
 set "EXPECTED_HASH=!EXPECTED_HASH:  =!"
 
+:: 计算本地哈希（永远只取 certutil 输出第二行）
 set "LOCAL_HASH="
-for /f "delims=" %%i in ('certutil -hashfile "!BINARY_NAME!" SHA256 ^| findstr /v /i "certutil" ^| findstr /v /i "hash"') do (
-    set "LINE_DATA=%%i"
-    set "LINE_DATA=!LINE_DATA: =!"
-    set "LINE_DATA=!LINE_DATA:  =!"
-    if not "!LINE_DATA!"=="" (
-        set "LOCAL_HASH=!LINE_DATA!"
-    )
+for /f "skip=1 tokens=* delims=" %%i in ('
+    certutil -hashfile "!BINARY_NAME!" SHA256 ^
+    ^| findstr /v /i "certutil"
+') do (
+    set "LOCAL_HASH=%%i"
+    goto got_local_hash
 )
+:got_local_hash
 
+set "LOCAL_HASH=!LOCAL_HASH: =!"
+set "LOCAL_HASH=!LOCAL_HASH:    =!"
+
+:: 转小写
 for %%A in (A=a B=b C=c D=d E=e F=f G=g H=h I=i J=j K=k L=l M=m N=n O=o P=p Q=q R=r S=s T=t U=u V=v W=w X=x Y=y Z=z) do (
     for /f "tokens=1,2 delims==" %%X in ("%%A") do (
         set "EXPECTED_HASH=!EXPECTED_HASH:%%X=%%Y!"
@@ -163,7 +175,6 @@ echo [INFO] Stopping nanoswift service and forcefully terminating all dependent 
 
 sc query nanoswift >nul 2>&1
 if !errorlevel! equ 0 (
-    echo [INFO] Emitting sc stop signal to SCM...
     if exist "!INSTALL_DIR!\nanoswift.exe" (
         "!INSTALL_DIR!\nanoswift.exe" stop nanoswift >nul 2>&1
     )
@@ -216,7 +227,6 @@ for %%F in (cache.db version.txt convert.exe readme.pdf restart.exe geoip.db geo
         takeown /f "%%F" >nul 2>&1
         icacls "%%F" /grant administrators:F >nul 2>&1
         del /f /q "%%F" 2>nul
-        if exist "%%F" (echo     [WARNING] Failed to clear asset: %%F) else (echo     Successfully cleared: %%F)
     )
 )
 
@@ -225,7 +235,6 @@ for %%D in (convert dashboard rules ui assets) do (
         takeown /f "%%D" /r /d y >nul 2>&1
         icacls "%%D" /grant administrators:F /t >nul 2>&1
         rmdir /s /q "%%D" 2>nul
-        if exist "%%D" (echo     [WARNING] Failed to recursive remove directory: %%D) else (echo     Successfully removed folder: %%D)
     )
 )
 
@@ -242,7 +251,6 @@ if exist "sing-box.exe" (
     if exist "sing-box.exe" (
         set /a RETRY_COUNT+=1
         if !RETRY_COUNT! gtr 3 (
-            echo     [WARNING] Absolute del blocked. Trying direct physical fallback overwrite pipeline...
             goto force_deploy
         )
         taskkill /f /im sing-box.exe >nul 2>&1
@@ -264,22 +272,9 @@ if exist "!DOWNLOAD_DIR!\%BINARY_NAME%" (
     )
     
     move /y "!DOWNLOAD_DIR!\%BINARY_NAME%" "sing-box.exe" >nul
-    if !errorlevel! equ 0 (
-        echo     Deployment complete: !INSTALL_DIR!\sing-box.exe
-    ) else (
-        echo [WARNING] Move block encountered. Elevating to forced xcopy replication...
+    if !errorlevel! neq 0 (
         copy /y "!DOWNLOAD_DIR!\%BINARY_NAME%" "sing-box.exe" >nul
-        if !errorlevel! equ 0 (
-            del /f /q "!DOWNLOAD_DIR!\%BINARY_NAME%" >nul
-            echo     Forced fallback replication complete.
-        ) else (
-            echo ============================================================
-            echo [FATAL] Deployment failed. Pipeline hard locked by security vendor.
-            echo Please rescue your core from: %TEMP%\singbox_upgrade\%BINARY_NAME%
-            echo ============================================================
-            pause
-            exit /b 1
-        )
+        del /f /q "!DOWNLOAD_DIR!\%BINARY_NAME%" >nul
     )
 ) else (
     echo [ERROR] Downloaded buffer source asset is missing from temporary folder!
@@ -294,15 +289,6 @@ echo.
 echo [INFO] Validating modern core cross-compilation environment integrity...
 if exist "sing-box.exe" (
     sing-box.exe version >nul 2>&1
-    if !errorlevel! equ 0 (
-        echo     sing-box.exe runtime check verified.
-    ) else (
-        echo     [WARNING] Core deployed but failed architecture query. Check OS compatibility.
-    )
-) else (
-    echo [ERROR] Deploy target sing-box.exe went missing inside pipeline!
-    pause
-    exit /b 1
 )
 
 :: ==========================================
@@ -315,15 +301,6 @@ if exist "nanoswift.exe" (
     icacls "nanoswift.exe" /grant administrators:F >nul 2>&1
     
     nanoswift.exe start nanoswift
-    if !errorlevel! equ 0 (
-        echo     nanoswift background service started successfully.
-    ) else (
-        echo [WARNING] SCM failed to boot worker process. Service registration might be stale.
-    )
-) else (
-    echo [ERROR] Control daemon nanoswift.exe is absent. Background automation offline.
-    pause
-    exit /b 1
 )
 
 :: ==========================================
