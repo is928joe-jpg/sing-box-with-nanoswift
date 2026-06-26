@@ -87,7 +87,6 @@ setup_service() {
     echo "⚙️ 正在检测系统初始化管理器并配置自启动..."
     
     if [ -f /etc/openwrt_release ] || [ -d /etc/config ]; then
-        echo "   检测到系统为 [OpenWrt / ImmortalWrt] 正在配置 UCI 服务与 LuCI 面板..."
         
         # 1. 生成 UCI 配置文件
         cat <<EOF | sudo tee /etc/config/sing-box > /dev/null
@@ -192,10 +191,10 @@ service_triggers() {
 EOF
         
         sudo chmod +x /etc/init.d/sing-box
-        echo "🔄 正在注册并启动 OpenWrt procd 服务..."
+
         sudo /etc/init.d/sing-box enable
         sudo /etc/init.d/sing-box start
-        echo "✅ OpenWrt UCI/Procd 自启动服务已成功激活！"
+        echo "✅ OpenWrt 自启动服务已成功激活！"
 
     elif [ -d /run/systemd/system ] || pidof systemd &>/dev/null; then
         echo "   检测到系统使用 [systemd] (Ubuntu/Debian)..."
