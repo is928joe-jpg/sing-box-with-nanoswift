@@ -72,8 +72,7 @@ setup_service() {
         #    这里将 profile 和 static 两个核心目录护住，其余（包括旧的 run 目录）直接斩立决
         sudo find "$INSTALL_DIR" -mindepth 1 -maxdepth 1 \
             ! -name "profile" \
-            ! -name "static" \
-            ! -name "rules" \
+            ! -name "static" ! -name "rules" \
             -exec rm -rf {} + 2>/dev/null || true
     fi
     # =======================================================================================
