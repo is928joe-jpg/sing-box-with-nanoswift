@@ -73,7 +73,7 @@ setup_service() {
         sudo find "$INSTALL_DIR" -mindepth 1 -maxdepth 1 \
             ! -name "profile" \
             ! -name "static" \
-            ! -name "rules" \            
+            ! -name "rules" \
             -exec rm -rf {} + 2>/dev/null || true
     fi
     # =======================================================================================
