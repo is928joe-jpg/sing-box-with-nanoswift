@@ -65,8 +65,15 @@ setup_service() {
 
     # ========== 🚀 严格在此处：新文件释放前，精准移除除 profile/ 和 static/ 外的全部内容 ==========
     if [ -d "$INSTALL_DIR" ]; then
-        echo "🧹 正在释放新文件前清理目录，仅保留 static/ 和 profile/ ..."
-        sudo find "$INSTALL_DIR" -mindepth 1 ! -path "$INSTALL_DIR/profile*" ! -path "$INSTALL_DIR/static*" -delete 2>/dev/null || true
+        echo "🧹 正在释放新文件前清理目录 $INSTALL_DIR ..."
+        echo "💡 安全保留提示：仅保留用户数据目录 (static/ 和 profile/)"
+        
+        # 1. 移除非白名单的一级文件和文件夹（如 version.txt, cache.db, srs_updater 以及旧二进制等）
+        #    这里将 profile 和 static 两个核心目录护住，其余（包括旧的 run 目录）直接斩立决
+        sudo find "$INSTALL_DIR" -mindepth 1 -maxdepth 1 \
+            ! -name "profile" \
+            ! -name "static" \
+            -exec rm -rf {} + 2>/dev/null || true
     fi
     # =======================================================================================
 
@@ -80,7 +87,6 @@ setup_service() {
     echo "⚙️ 正在检测系统初始化管理器并配置自启动..."
     
     if [ -f /etc/openwrt_release ] || [ -d /etc/config ]; then
-        echo "   检测到系统为 [OpenWrt / ImmortalWrt] 正在配置 UCI 服务与 LuCI 面板..."
         
         # 1. 生成 UCI 配置文件
         cat <<EOF | sudo tee /etc/config/sing-box > /dev/null
@@ -185,10 +191,10 @@ service_triggers() {
 EOF
         
         sudo chmod +x /etc/init.d/sing-box
-        echo "🔄 正在注册并启动 OpenWrt procd 服务..."
+
         sudo /etc/init.d/sing-box enable
         sudo /etc/init.d/sing-box start
-        echo "✅ OpenWrt UCI/Procd 自启动服务已成功激活！"
+        echo "✅ OpenWrt 自启动服务已成功激活！"
 
     elif [ -d /run/systemd/system ] || pidof systemd &>/dev/null; then
         echo "   检测到系统使用 [systemd] (Ubuntu/Debian)..."
@@ -292,7 +298,7 @@ esac
 DATE_DIR="dist/$(date +%Y-%m-%d)"
 mkdir -p "$DATE_DIR"
 
-RAW_BASE_URL="https://raw.githubusercontent.com/is928joe-jpg/sing-box-with-nanoswift/refs/heads/main/2026-06-23"
+RAW_BASE_URL="https://raw.githubusercontent.com/is928joe-jpg/sing-box-with-nanoswift/refs/heads/main/2026-06-27"
 BINARY_NAME="sing-box-${platform}"
 SHA_NAME="${BINARY_NAME}.sha256"
 
